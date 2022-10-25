@@ -1,24 +1,28 @@
-# stability-client
+# react-native-stability-client
 
-A client library for the Stability AI SDK.
+A client library for the Stability AI SDK for use in React Native. This repo has been cloned from stability-client. The core node functions for running on the command line and saving the images to file have been removed.
 
 [Requires an API Key for DreamStudio which can be found here.](https://beta.dreamstudio.ai/membership)
+
+## Status
+
+Testing as at 25 October 2022
+
 
 ## Installation
 
 ```sh
 # NPM
-npm i -g stability-client
+npm i -g react-native-stability-client
 
-# To Update
-npm update -g stability-client
 
 # Yarn
-yarn global add stability-client
+yarn global add react-native-stability-client
 ```
 
-## Example
+## Example of parameters
 
+options
 ```sh
 stability \
   -s 150 \ # Steps
@@ -75,8 +79,6 @@ try {
 ## CLI
 
 ```sh
-Usage: stability [options] [prompt]
-
 Generate an image
 
 Arguments:
@@ -107,8 +109,6 @@ yarn
 yarn build
 
 npm link
-
-export DREAMSTUDIO_API_KEY=...
 
 stability "A stunning house"
 ```

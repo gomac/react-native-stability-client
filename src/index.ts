@@ -13,19 +13,15 @@ import {
   PromptParameters,
   ScheduleParameters,
 } from 'stability-sdk/gooseai/generation/generation_pb'
-import { NodeHttpTransport } from '@improbable-eng/grpc-web-node-http-transport'
+import { ReactNativeTransport } from '@improbable-eng/grpc-web-react-native-transport'
 import uuid4 from 'uuid4'
-import mime from 'mime'
-import fs from 'fs'
-import path from 'path'
-import mkdirp from 'mkdirp'
 import { EventEmitter } from 'events'
 import TypedEmitter from 'typed-emitter'
+import { Buffer } from "@craftzdog/react-native-buffer";
 
 import { diffusionMap, range } from './utils'
 
 type DraftStabilityOptions = Partial<{
-  outDir: string
   debug: boolean
   requestId: string
   samples: number
@@ -37,7 +33,6 @@ type DraftStabilityOptions = Partial<{
   diffusion: keyof typeof diffusionMap
   steps: number
   cfgScale: number
-  noStore: boolean
   imagePrompt: { mime: string; content: Buffer } | null
   stepSchedule: { start?: number; end?: number }
 }>
@@ -51,8 +46,7 @@ type StabilityOptions = RequiredStabilityOptions &
   Required<DraftStabilityOptions>
 
 type ImageData = {
-  buffer: Buffer
-  filePath: string
+  binary: number
   seed: number
   mimeType: string
   classifications: { realizedAction: number }
@@ -89,9 +83,7 @@ const withDefaults: (
     steps: draft.steps ?? 50,
     cfgScale: draft.cfgScale ?? 7,
     samples: draft.samples ?? 1,
-    outDir: draft.outDir ?? path.join(process.cwd(), '.out', requestId),
     debug: Boolean(draft.debug),
-    noStore: Boolean(draft.noStore),
     imagePrompt: draft.imagePrompt ?? null,
     stepSchedule: draft.stepSchedule ?? {},
   }
@@ -112,19 +104,16 @@ export const generate: (
     cfgScale,
     samples,
     stepSchedule,
-    outDir,
+    //outDir,
     prompt: promptText,
     imagePrompt: imagePromptData,
     apiKey,
-    noStore,
     debug,
   } = withDefaults(opts)
 
   if (!promptText) throw new Error('Prompt text is required')
 
   const api = new EventEmitter() as StabilityApi
-
-  if (!noStore) mkdirp.sync(outDir)
 
   /** Build Request **/
   const request = new Request()
@@ -179,18 +168,11 @@ export const generate: (
   request.setImage(image)
   /** End Build Request **/
 
-  if (debug) {
-    console.log(
-      '[stability - request]',
-      JSON.stringify(request.toObject(), null, 2)
-    )
-  }
-
   grpc.invoke(GenerationService.Generate, {
     request,
     host,
     metadata: new grpc.Metadata({ Authorization: `Bearer ${apiKey}` }),
-    transport: NodeHttpTransport(),
+    transport: ReactNativeTransport({}),
     onEnd: (code, message, trailers) => {
       api.emit('end', {
         isOk: code === grpc.Code.OK,
@@ -207,6 +189,7 @@ export const generate: (
         let image: Artifact.AsObject | null = null
         let classifications: Artifact.AsObject | null = null
         answer.artifactsList.forEach((artifact) => {
+          //console.log('artifact.type = ', artifact.type)
           if (artifact.type === ArtifactType.ARTIFACT_IMAGE) {
             if (image !== null)
               throw new Error(
@@ -225,29 +208,18 @@ export const generate: (
         })
 
         if (image !== null) {
+
           if (classifications === null)
             throw new Error('Missing classifications in answer')
 
           const { id, mime: mimeType, binary, seed: innerSeed } = image
 
-          // @ts-ignore
-          const buffer = Buffer.from(binary, 'base64')
-          const filePath = path.resolve(
-            path.join(
-              outDir,
-              `${answer.answerId}-${id}-${innerSeed}.${mime.getExtension(
-                mimeType
-              )}`
-            )
-          )
-
-          if (!noStore) fs.writeFileSync(filePath, buffer)
+          console.log("id: ", id)
 
           const claz: Artifact.AsObject = classifications
 
           api.emit('image', {
-            buffer,
-            filePath,
+            binary,
             seed: innerSeed,
             mimeType,
             classifications: {

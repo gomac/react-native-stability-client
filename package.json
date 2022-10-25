@@ -1,5 +1,5 @@
 {
-  "name": "stability-client",
+  "name": "react-native-stability-client",
   "version": "1.6.1",
   "description": "A client for the Stability AI SDK",
   "main": "./build/index.js",
@@ -43,7 +43,6 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
     "events": "^3.3.0",
-    "path-browserify": "^1.0.1",
     "prettier": "^2.7.1",
     "process": "^0.11.10",
     "rimraf": "^3.0.2",
@@ -58,15 +57,11 @@
   },
   "dependencies": {
     "@improbable-eng/grpc-web": "^0.15.0",
-    "@improbable-eng/grpc-web-node-http-transport": "^0.15.0",
-    "commander": "^9.4.0",
-    "dotenv": "^16.0.2",
+    "@improbable-eng/grpc-web-react-native-transport": "^0.15.0",
     "google-protobuf": "^3.21.0",
-    "mime": "^3.0.0",
-    "mkdirp": "^1.0.4",
-    "read-pkg-up": "^7.0.1",
     "typed-emitter": "^2.1.0",
-    "uuid4": "^2.0.3"
+    "uuid4": "^2.0.3",
+    "@craftzdog/react-native-buffer": "^6.0.5"
   },
   "files": [
     "package.json",

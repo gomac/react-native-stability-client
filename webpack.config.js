@@ -5,8 +5,7 @@ const ShebangPlugin = require('webpack-shebang-plugin')
 module.exports = {
   mode: 'production',
   entry: {
-    index: './src/index.ts',
-    bin: './src/bin.ts',
+    index: './src/index.ts'
   },
   externalsPresets: { node: true },
   externals: [
