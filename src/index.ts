@@ -14,7 +14,7 @@ import {
   ScheduleParameters,
 } from 'stability-sdk/gooseai/generation/generation_pb'
 import { ReactNativeTransport } from '@improbable-eng/grpc-web-react-native-transport'
-import uuid4 from 'uuid4'
+import uuid4 from 'uuid/v4';
 import { EventEmitter } from 'events'
 import TypedEmitter from 'typed-emitter'
 import { Buffer } from "@craftzdog/react-native-buffer";
