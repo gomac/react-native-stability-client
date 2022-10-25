@@ -60,7 +60,7 @@
     "@improbable-eng/grpc-web-react-native-transport": "^0.15.0",
     "google-protobuf": "^3.21.0",
     "typed-emitter": "^2.1.0",
-    "uuid4": "^2.0.3",
+    "uuid": "^3.3.3",
     "@craftzdog/react-native-buffer": "^6.0.5"
   },
   "files": [
