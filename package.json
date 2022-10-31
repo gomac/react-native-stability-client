@@ -14,9 +14,6 @@
     "format": "prettier --write .",
     "lint": "eslint . --fix --ext .ts,.tsx --max-warnings 0"
   },
-  "bin": {
-    "stability": "build/bin.js"
-  },
   "keywords": [],
   "contributors": [
     "Jacob Kelley <jakie8@gmail.com>",
