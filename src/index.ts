@@ -212,9 +212,9 @@ export const generate: (
           if (classifications === null)
             throw new Error('Missing classifications in answer')
 
-          const { id, mime: mimeType, binary, seed: innerSeed } = image
+          const { mime: mimeType, binary, seed: innerSeed } = image
 
-          console.log("id: ", id)
+          //console.log("id: ", id)
 
           const claz: Artifact.AsObject = classifications
 
